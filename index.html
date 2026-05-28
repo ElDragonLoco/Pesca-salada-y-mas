@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesca Salada y Más</title>
     <style>
-        /* Estilos visuales básicos para que la página se vea bonita */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -17,21 +16,26 @@
             background-color: #02457a;
             color: white;
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        header h1 { margin: 0; font-size: 2.5rem; }
+        
+        /* NUEVO: Estilos para el Menú de Navegación */
+        nav {
+            background-color: #001b48;
+            text-align: center;
+            padding: 0.8rem;
         }
-        header p {
-            margin: 0.5rem 0 0 0;
-            opacity: 0.9;
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
         }
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        nav a:hover { color: #97cadb; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
         .intro {
             background: white;
             padding: 1.5rem;
@@ -45,19 +49,22 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
+        
+        /* MODIFICADO: Las tarjetas ahora son enlaces `<a>` */
         .card {
             background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
-        .card:hover {
-            transform: translateY(-5px);
-        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
         .card-img {
             height: 180px;
-            background-color: #018abe;
             color: white;
             display: flex;
             align-items: center;
@@ -65,20 +72,10 @@
             font-weight: bold;
             font-size: 1.2rem;
         }
-        .card-content {
-            padding: 1rem;
-        }
-        .card-content h3 {
-            margin-top: 0;
-            color: #02457a;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: #001b48;
-            color: white;
-            margin-top: 3rem;
-        }
+        .card-content { padding: 1rem; }
+        .card-content h3 { margin-top: 0; color: #02457a; }
+        
+        footer { text-align: center; padding: 2rem; background-color: #001b48; color: white; margin-top: 3rem; }
     </style>
 </head>
 <body>
@@ -88,52 +85,48 @@
         <p>Los mejores productos del mar directos a tu mesa</p>
     </header>
 
+    <!-- NUEVO: Menú para moverse entre páginas -->
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="pescado.html">Pescado Fresco</a>
+        <a href="articulos.html">Artículos de Pesca</a>
+    </nav>
+
     <div class="container">
         
         <section class="intro">
             <h2>Bienvenidos a nuestra web de Pesca</h2>
-            <p>Aquí encontrarás información, artículos y el mejor catálogo de productos relacionados con el mar, la pesca tradicional y los mejores salazones.</p>
+            <p>Haz clic en cualquiera de nuestras secciones de abajo para ver más detalles.</p>
         </section>
 
         <main class="grid">
-            <!-- Tarjeta 1 -->
-            <article class="card">
+            <!-- Tarjeta 1 (Te lleva a pescado.html) -->
+            <a href="pescado.html" class="card">
                 <div class="card-img" style="background-image: linear-gradient(135deg, #02457a, #018abe);">
                     🐟 Pescado Fresco
                 </div>
                 <div class="card-content">
                     <h3>Género del Día</h3>
-                    <p>Capturas diarias seleccionadas de la lonja de la máxima calidad y frescura.</p>
+                    <p>Ver las capturas diarias seleccionadas hoy en la lonja. ¡Haz clic para ver la lista!</p>
                 </div>
-            </article>
+            </a>
 
-            <!-- Tarjeta 2 -->
-            <article class="card">
-                <div class="card-img" style="background-image: linear-gradient(135deg, #018abe, #97cadb);">
-                    🧂 Salazones Premium
-                </div>
-                <div class="card-content">
-                    <h3>Tradición Salada</h3>
-                    <p>Anchoas, mojama y bacalao curados con métodos artesanales de toda la vida.</p>
-                </div>
-            </article>
-
-            <!-- Tarjeta 3 -->
-            <article class="card">
+            <!-- Tarjeta 2 (Te lleva a articulos.html) -->
+            <a href="articulos.html" class="card">
                 <div class="card-img" style="background-image: linear-gradient(135deg, #001b48, #02457a);">
                     🎣 Artículos de Pesca
                 </div>
                 <div class="card-content">
                     <h3>Para el Pescador</h3>
-                    <p>Canzos, anzuelos y los mejores consejos para que tu jornada de pesca sea un éxito.</p>
+                    <p>Equipamiento, cañas, anzuelos y los mejores consejos para tu jornada. ¡Haz clic aquí!</p>
                 </div>
-            </article>
+            </a>
         </main>
 
     </div>
 
     <footer>
-        <p>&copy; 2026 Pesca Salada y Más - Hecho con GitHub Pages</p>
+        <p>&copy; 2026 Pesca Salada y Más</p>
     </footer>
 
 </body>
