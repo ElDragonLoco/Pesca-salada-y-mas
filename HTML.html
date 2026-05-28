@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesca Salada y Más</title>
+    <style>
+        /* Estilos visuales básicos para que la página se vea bonita */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        header {
+            background-color: #02457a;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .intro {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-img {
+            height: 180px;
+            background-color: #018abe;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .card-content {
+            padding: 1rem;
+        }
+        .card-content h3 {
+            margin-top: 0;
+            color: #02457a;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #001b48;
+            color: white;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Pesca Salada y Más</h1>
+        <p>Los mejores productos del mar directos a tu mesa</p>
+    </header>
+
+    <div class="container">
+        
+        <section class="intro">
+            <h2>Bienvenidos a nuestra web de Pesca</h2>
+            <p>Aquí encontrarás información, artículos y el mejor catálogo de productos relacionados con el mar, la pesca tradicional y los mejores salazones.</p>
+        </section>
+
+        <main class="grid">
+            <!-- Tarjeta 1 -->
+            <article class="card">
+                <div class="card-img" style="background-image: linear-gradient(135deg, #02457a, #018abe);">
+                    🐟 Pescado Fresco
+                </div>
+                <div class="card-content">
+                    <h3>Género del Día</h3>
+                    <p>Capturas diarias seleccionadas de la lonja de la máxima calidad y frescura.</p>
+                </div>
+            </article>
+
+            <!-- Tarjeta 2 -->
+            <article class="card">
+                <div class="card-img" style="background-image: linear-gradient(135deg, #018abe, #97cadb);">
+                    🧂 Salazones Premium
+                </div>
+                <div class="card-content">
+                    <h3>Tradición Salada</h3>
+                    <p>Anchoas, mojama y bacalao curados con métodos artesanales de toda la vida.</p>
+                </div>
+            </article>
+
+            <!-- Tarjeta 3 -->
+            <article class="card">
+                <div class="card-img" style="background-image: linear-gradient(135deg, #001b48, #02457a);">
+                    🎣 Artículos de Pesca
+                </div>
+                <div class="card-content">
+                    <h3>Para el Pescador</h3>
+                    <p>Canzos, anzuelos y los mejores consejos para que tu jornada de pesca sea un éxito.</p>
+                </div>
+            </article>
+        </main>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Pesca Salada y Más - Hecho con GitHub Pages</p>
+    </footer>
+
+</body>
+</html>
