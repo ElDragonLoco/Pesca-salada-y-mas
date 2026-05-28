@@ -3,131 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesca Salada y Más</title>
+    <title>Pesca Salada y Más - Bitácora de un Pescador</title>
     <style>
+        /* Estilos Base Estilo Marino Oscuro */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: #0b132b;
+            color: #f4f7f6;
         }
         header {
-            background-color: #02457a;
-            color: white;
+            background: linear-gradient(135deg, #1c2541, #0b132b);
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 3rem 1rem;
+            border-bottom: 3px solid #48cae4;
         }
-        header h1 { margin: 0; font-size: 2.5rem; }
-        
-        /* NUEVO: Estilos para el Menú de Navegación */
+        header h1 { margin: 0; font-size: 2.8rem; color: #48cae4; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        header p { margin: 0.5rem 0 0 0; font-size: 1.2rem; color: #95d5b2; }
+
+        /* Menú de Navegación */
         nav {
-            background-color: #001b48;
+            background-color: #1c2541;
             text-align: center;
-            padding: 0.8rem;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         nav a {
-            color: white;
+            color: #f4f7f6;
             text-decoration: none;
             margin: 0 15px;
             font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s;
         }
-        nav a:hover { color: #97cadb; }
+        nav a.active, nav a:hover { color: #48cae4; }
 
-        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
-        
-        .intro {
-            background: white;
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* Resumen de estadísticas rápidas */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #1c2541;
             padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #48cae4; display: block; }
+        .stat-label { color: #a5a5a5; font-size: 0.9rem; text-transform: uppercase; }
+
+        /* Filtros de Inventario */
+        .filter-menu {
             text-align: center;
             margin-bottom: 2rem;
         }
-        .grid {
+        .filter-btn {
+            background: #1c2541;
+            border: 2px solid #3a506b;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: #48cae4;
+            color: #0b132b;
+            border-color: #48cae4;
+        }
+
+        /* Rejilla de Materiales */
+        .grid-materiales {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
         }
-        
-        /* MODIFICADO: Las tarjetas ahora son enlaces `<a>` */
-        .card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .item-card {
+            background: #1c2541;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-left: 5px solid #3a506b;
             transition: transform 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .item-card:hover { transform: translateY(-3px); }
         
-        .card-img {
-            height: 180px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Colores según el semáforo del estado */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: bold;
-            font-size: 1.2rem;
+            float: right;
         }
-        .card-content { padding: 1rem; }
-        .card-content h3 { margin-top: 0; color: #02457a; }
-        
-        footer { text-align: center; padding: 2rem; background-color: #001b48; color: white; margin-top: 3rem; }
+        .status-listo { background-color: #2a9d8f; color: white; }
+        .status-mantenimiento { background-color: #e9c46a; color: #264653; }
+        .status-boxes { background-color: #e76f51; color: white; }
+
+        .item-card h3 { margin: 0 0 0.5rem 0; color: #48cae4; font-size: 1.3rem; }
+        .item-card .modelo { color: #95d5b2; font-style: italic; margin-bottom: 1rem; font-size: 0.9rem; }
+        .item-card p { margin: 0; color: #d1d1d1; line-height: 1.4; }
+
+        footer { text-align: center; padding: 2rem; background-color: #0b132b; color: #5c677d; border-top: 1px solid #1c2541; margin-top: 4rem; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Pesca Salada y Más</h1>
-        <p>Los mejores productos del mar directos a tu mesa</p>
+        <p>Isla de La Palma 🌋 • Bitácora, Equipos y Capturas</p>
     </header>
 
-    <!-- NUEVO: Menú para moverse entre páginas -->
     <nav>
-        <a href="index.html">Inicio</a>
-        <a href="pescado.html">Pescado Fresco</a>
-        <a href="articulos.html">Artículos de Pesca</a>
+        <a href="index.html" class="active">El Arsenal (Equipos)</a>
+        <a href="capturas.html">Mis Capturas</a>
+        <a href="mapa.html">Mapa de Pesca</a>
     </nav>
 
     <div class="container">
         
-        <section class="intro">
-            <h2>Bienvenidos a nuestra web de Pesca</h2>
-            <p>Haz clic en cualquiera de nuestras secciones de abajo para ver más detalles.</p>
+        <!-- Barra de estadísticas dinámicas automáticas -->
+        <section class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number" id="stat-capturas">0</span>
+                <span class="stat-label">Capturas Registradas</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="stat-equipos">0</span>
+                <span class="stat-label">Equipos en Arsenal</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">La Palma</span>
+                <span class="stat-label">Base de Operaciones</span>
+            </div>
         </section>
 
-        <main class="grid">
-            <!-- Tarjeta 1 (Te lleva a pescado.html) -->
-            <a href="pescado.html" class="card">
-                <div class="card-img" style="background-image: linear-gradient(135deg, #02457a, #018abe);">
-                    🐟 Pescado Fresco
-                </div>
-                <div class="card-content">
-                    <h3>Género del Día</h3>
-                    <p>Ver las capturas diarias seleccionadas hoy en la lonja. ¡Haz clic para ver la lista!</p>
-                </div>
-            </a>
+        <h2>Inventario de Material y Equipos</h2>
+        
+        <!-- Botones para filtrar el equipo -->
+        <div class="filter-menu">
+            <button class="filter-btn active" onclick="filtrarMaterial('todos', this)">Todo el material</button>
+            <button class="filter-btn" onclick="filtrarMaterial('canas', this)">Cañas</button>
+            <button class="filter-btn" onclick="filtrarMaterial('carretes', this)">Carretes</button>
+            <button class="filter-btn" onclick="filtrarMaterial('repuestos', this)">Repuestos y Accesorios</button>
+        </div>
 
-            <!-- Tarjeta 2 (Te lleva a articulos.html) -->
-            <a href="articulos.html" class="card">
-                <div class="card-img" style="background-image: linear-gradient(135deg, #001b48, #02457a);">
-                    🎣 Artículos de Pesca
-                </div>
-                <div class="card-content">
-                    <h3>Para el Pescador</h3>
-                    <p>Equipamiento, cañas, anzuelos y los mejores consejos para tu jornada. ¡Haz clic aquí!</p>
-                </div>
-            </a>
+        <!-- Aquí se inyectarán las tarjetas de tus cañas y carretes desde el JSON -->
+        <main class="grid-materiales" id="contenedor-materiales">
+            <p>Cargando arsenal...</p>
         </main>
 
     </div>
 
     <footer>
-        <p>&copy; 2026 Pesca Salada y Más</p>
+        <p>&copy; 2026 Pesca Salada y Más - Cuida el mar canario.</p>
     </footer>
 
+    <!-- CÓDIGO JAVASCRIPT: Se encarga de leer el JSON sin que tú hagas nada -->
+    <script>
+        let todosLosEquipos = [];
+
+        // 1. Leer el archivo JSON al cargar la página
+        fetch('datos-pesca.json')
+            .then(response => response.json())
+            .then(data => {
+                todosLosEquipos = data.equipos;
+                
+                // Actualizar números de las estadísticas en la barra superior
+                document.getElementById('stat-capturas').innerText = data.capturas.length;
+                document.getElementById('stat-equipos').innerText = data.equipos.length;
+                
+                // Mostrar todo el material al principio
+                renderizarEquipos(todosLosEquipos);
+            })
+            .catch(error => {
+                console.error("Error cargando los datos de pesca:", error);
+                document.getElementById('contenedor-materiales').innerHTML = "<p>Error al cargar el arsenal. Asegúrate de tener el archivo datos-pesca.json creado.</p>";
+            });
+
+        // 2. Función para pintar las tarjetas en la pantalla
+        function renderizarEquipos(listaAFiltrar) {
+            const contenedor = document.getElementById('contenedor-materiales');
+            contenedor.innerHTML = ""; // Vaciar cargando...
+
+            if(listaAFiltrar.length === 0) {
+                contenedor.innerHTML = "<p>No hay elementos en esta categoría todavía.</p>";
+                return;
+            }
+
+            listaAFiltrar.forEach(item => {
+                // Configurar el texto y color del semáforo de estado
+                let estadoTexto = "Listo para combate";
+                let estadoClase = "status-listo";
+                if(item.estado === "mantenimiento") {
+                    estadoTexto = "En Mantenimiento";
+                    estadoClase = "status-mantenimiento";
+                } else if(item.estado === "boxes") {
+                    estadoTexto = "En Boxes / Roto";
+                    estadoClase = "status-boxes";
+                }
+
+                // Crear el bloque HTML de la tarjeta
+                const tarjeta = `
+                    <article class="item-card">
+                        <span class="status-badge ${estadoClase}">${estadoTexto}</span>
+                        <h3>${item.nombre}</h3>
+                        <div class="modelo">${item.modelo}</div>
+                        <p>${item.detalles}</p>
+                    </article>
+                `;
+                contenedor.innerHTML += tarjeta;
+            });
+        }
+
+        // 3. Función para los botones de filtrado (Cañas, Carretes, etc.)
+        function filtrarMaterial(categoria, botonPresionado) {
+            // Cambiar la clase activa en los botones
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            botonPresionado.classList.add('active');
+
+            // Filtrar la lista
+            if(categoria === 'todos') {
+                renderizarEquipos(todosLosEquipos);
+            } else {
+                const filtrados = todosLosEquipos.filter(item => item.categoria === categoria);
+                renderizarEquipos(filtrados);
+            }
+        }
+    </script>
 </body>
 </html>
