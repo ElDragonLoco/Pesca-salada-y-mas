@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Capturas - Pesca Salada y Más</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #0b132b;
+            color: #f4f7f6;
+        }
+        header {
+            background: linear-gradient(135deg, #1c2541, #0b132b);
+            text-align: center;
+            padding: 2rem 1rem;
+            border-bottom: 3px solid #48cae4;
+        }
+        header h1 { margin: 0; font-size: 2.5rem; color: #48cae4; }
+
+        /* Menú de Navegación */
+        nav {
+            background-color: #1c2541;
+            text-align: center;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        nav a {
+            color: #f4f7f6;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        nav a:hover, nav a.active { color: #48cae4; }
+
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* Estilos del Pescómetro (Podio de récords) */
+        .pescometro {
+            background: #1c2541;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            border: 1px solid #3a506b;
+        }
+        .pescometro h2 { margin-top: 0; color: #95d5b2; text-align: center; }
+        .podio {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            align-items: flex-end;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .podio-item {
+            background: #0b132b;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 180px;
+            border-top: 4px solid #48cae4;
+        }
+        .podio-item.primero { border-top-color: #ffd700; transform: scale(1.05); }
+        .podio-item.segundo { border-top-color: #c0c0c0; }
+        .medalla { font-size: 1.5rem; display: block; margin-bottom: 0.5rem; }
+
+        /* Galería de Capturas comunes */
+        .galeria-capturas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .pez-card {
+            background: #1c2541;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .pez-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #3a506b;
+        }
+        .pez-info { padding: 1.5rem; }
+        .pez-info h3 { margin: 0 0 0.8rem 0; color: #48cae4; font-size: 1.4rem; border-bottom: 1px solid #3a506b; padding-bottom: 0.5rem; }
+        .pez-detalles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .pez-detalles span { color: #a5a5a5; }
+        .pez-detalles strong { color: white; text-transform: capitalize; }
+
+        footer { text-align: center; padding: 2rem; background-color: #0b132b; color: #5c677d; border-top: 1px solid #1c2541; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Diario de Capturas</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">El Arsenal (Equipos)</a>
+        <a href="capturas.html" class="active">Mis Capturas</a>
+        <a href="mapa.html">Mapa de Pesca</a>
+    </nav>
+
+    <div class="container">
+
+        <section class="pescometro">
+            <h2>🏆 El Pescómetro (Mayores Piezas)</h2>
+            <div class="podio" id="podio-records">
+                <p>Calculando tus récords...</p>
+            </div>
+        </section>
+
+        <h2>Todas las Jornadas Registradas</h2>
+        
+        <main class="galeria-capturas" id="contenedor-capturas">
+            <p>Cargando diario de abordo...</p>
+        </main>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Pesca Salada y Más - Respeto por la costa canaria.</p>
+    </footer>
+
+    <script>
+        // Leer el JSON
+        fetch('datos-pesca.json')
+            .then(response => response.json())
+            .then(data => {
+                const capturas = data.capturas;
+                
+                renderizarPescometro(capturas);
+                renderizarGaleria(capturas);
+            })
+            .catch(error => {
+                console.error("Error cargando capturas:", error);
+                document.getElementById('contenedor-capturas').innerHTML = "<p>Error al cargar el diario de capturas.</p>";
+            });
+
+        // Función 1: Ordenar y mostrar los más pesados en el Podio
+        function renderizarPescometro(lista) {
+            const podioContenedor = document.getElementById('podio-records');
+            if (lista.length === 0) {
+                podioContenedor.innerHTML = "<p>Aún no hay registros de peso.</p>";
+                return;
+            }
+
+            // Ordenamos de mayor a menor peso (extrayendo el número flotante del texto "8.5 kg")
+            const ordenados = [...lista].sort((a, b) => parseFloat(b.peso) - parseFloat(a.peso));
+            
+            podioContenedor.innerHTML = ""; // Limpiar
+
+            // Pintar el Primero (Récord Absoluto)
+            if(ordenados[0]) {
+                podioContenedor.innerHTML += `
+                    <div class="podio-item primero">
+                        <span class="medalla">🥇 Récord</span>
+                        <strong>${ordenados[0].especie}</strong>
+                        <div style="color: #ffd700; font-size: 1.3rem; font-weight:bold; margin-top:5px;">${ordenados[0].peso}</div>
+                    </div>
+                `;
+            }
+            // Pintar el Segundo si existe
+            if(ordenados[1]) {
+                podioContenedor.innerHTML += `
+                    <div class="podio-item segundo">
+                        <span class="medalla">🥈 2º Puesto</span>
+                        <strong>${ordenados[1].especie}</strong>
+                        <div style="color: #c0c0c0; font-weight:bold; margin-top:5px;">${ordenados[1].peso}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Función 2: Pintar todas las tarjetas en la galería
+        function renderizarGaleria(lista) {
+            const contenedor = document.getElementById('contenedor-capturas');
+            contenedor.innerHTML = "";
+
+            if (lista.length === 0) {
+                contenedor.innerHTML = "<p>No has añadido capturas todavía.</p>";
+                return;
+            }
+
+            lista.forEach(pez => {
+                const tarjeta = `
+                    <article class="pez-card">
+                        <img class="pez-img" src="${pez.foto}" alt="${pez.especie}">
+                        <div class="pez-info">
+                            <h3>🐟 ${pez.especie}</h3>
+                            <div class="pez-detalles">
+                                <div><span>Peso:</span></div> <div><strong>${pez.peso}</strong></div>
+                                <div><span>Zona:</span></div> <div><strong>${pez.lugar}</strong></div>
+                                <div><span>Cebo:</span></div> <div><strong>${pez.cebo}</strong></div>
+                                <div><span>Fecha:</span></div> <div><strong>${pez.fecha}</strong></div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+                contenedor.innerHTML += tarjeta;
+            });
+        }
+    </script>
+</body>
+</html>
