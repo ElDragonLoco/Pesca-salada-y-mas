@@ -5,170 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Pesca - Pesca Salada y Más</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #0b132b;
-            color: #f4f7f6;
-        }
-        header {
-            background: linear-gradient(135deg, #1c2541, #0b132b);
-            text-align: center;
-            padding: 2rem 1rem;
-            border-bottom: 3px solid #48cae4;
-        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #0b132b; color: #f4f7f6; }
+        header { background: linear-gradient(135deg, #1c2541, #0b132b); text-align: center; padding: 2rem 1rem; border-bottom: 3px solid #48cae4; }
         header h1 { margin: 0; font-size: 2.5rem; color: #48cae4; }
-
-        /* Menú de Navegación */
-        nav {
-            background-color: #1c2541;
-            text-align: center;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
+        nav { background-color: #1c2541; text-align: center; padding: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         nav a { color: #f4f7f6; text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1rem; }
         nav a:hover, nav a.active { color: #48cae4; }
-
         .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-
-        /* Contenedor del Mapa Visual */
-        .map-section {
-            background: #1c2541;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            margin-bottom: 3rem;
-            border: 1px solid #3a506b;
-        }
-        
-        /* Contenedor de botones de Spots */
-        .spots-container {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-        .spot-btn {
-            background: #0b132b;
-            border: 2px solid #48cae4;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: transform 0.2s, background 0.2s;
-        }
-        .spot-btn:hover, .spot-btn.active {
-            background: #48cae4;
-            color: #0b132b;
-            transform: scale(1.05);
-        }
-
-        /* Bloque de resultados filtrados por zona */
-        .resultados-zona {
-            background: #1c2541;
-            border-radius: 12px;
-            padding: 2rem;
-            border-left: 5px solid #48cae4;
-        }
+        .map-section { background: #1c2541; border-radius: 12px; padding: 2rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 3rem; border: 1px solid #3a506b; }
+        .spots-container { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .spot-btn { background: #0b132b; border: 2px solid #48cae4; color: white; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.2s; }
+        .spot-btn:hover, .spot-btn.active { background: #48cae4; color: #0b132b; transform: scale(1.05); }
+        .resultados-zona { background: #1c2541; border-radius: 12px; padding: 2rem; border-left: 5px solid #48cae4; }
         .resultados-zona h2 { margin-top: 0; color: #95d5b2; }
-
-        .grid-resultados {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        .mini-pez-card {
-            background: #0b132b;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.5rem;
-            border: 1px solid #3a506b;
-        }
-        .mini-pez-img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
+        .grid-resultados { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .mini-pez-card { background: #0b132b; border-radius: 8px; overflow: hidden; display: flex; align-items: center; gap: 1rem; padding: 0.5rem; border: 1px solid #3a506b; }
+        .mini-pez-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
         .mini-pez-info h4 { margin: 0 0 5px 0; color: #48cae4; font-size: 1.1rem; }
         .mini-pez-info p { margin: 0; font-size: 0.85rem; color: #d1d1d1; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
-    <header>
-        <h1>Zonas de Pesca</h1>
-    </header>
-
+    <header><h1>Zonas de Pesca</h1></header>
     <nav>
         <a href="index.html">El Arsenal (Equipos)</a>
         <a href="capturas.html">Mis Capturas</a>
         <a href="mapa.html" class="active">Mapa de Pesca</a>
     </nav>
-
     <div class="container">
-
         <section class="map-section">
             <h2>🗺️ Selector de Puntos Estratégicos</h2>
-            <p>Toca cualquiera de los 4 spots marcados en las islas de La Palma y Tenerife para ver qué capturas he logrado en esa zona exacta.</p>
-            
+            <p>Toca cualquiera de los spots para consultar la base de datos de capturas en vivo de esa zona.</p>
             <div class="spots-container">
                 <button class="spot-btn" onclick="filtrarPorSpot('tazacorte', this)">🌋 La Palma: Muelle de Tazacorte</button>
-                <button class="spot-btn" onclick="filtrarPorSpot('fuencaliente', this)">🧂 La Palma: Las Salinas (Fuencaliente)</button>
+                <button class="spot-btn" onclick="filtrarPorSpot('fuencaliente', this)">🧂 La Palma: Las Salinas</button>
                 <button class="spot-btn" onclick="filtrarPorSpot('lasgalletas', this)">⛵ Tenerife: Las Galletas</button>
                 <button class="spot-btn" onclick="filtrarPorSpot('bajamar', this)">🌊 Tenerife: Bajamar</button>
             </div>
         </section>
-
         <section class="resultados-zona">
-            <h2 id="titulo-zona">📍 Selecciona un punto arriba para inspeccionar la zona</h2>
+            <h2 id="titulo-zona">📍 Esperando coordenadas...</h2>
             <div class="grid-resultados" id="contenedor-resultados-mapa">
-                <p style="color: #a5a5a5;">El diario de capturas geolocalizado está listo. Esperando coordenadas...</p>
+                <p style="color: #a5a5a5;">Selecciona un punto arriba para iniciar el escaneo del servidor en tiempo real.</p>
             </div>
         </section>
-
     </div>
-
-    <footer>
-        <p>&copy; 2026 Pesca Salada y Más - Islotes del Atlántico.</p>
-    </footer>
+    <footer><p>&copy; 2026 Pesca Salada y Más</p></footer>
 
     <script>
-        let todasLasCapturas = [];
+        const SUPABASE_URL = "https://gvycmttihglhveiblmdl.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Leer los datos del JSON al cargar la página
-        fetch('datos-pesca.json')
-            .then(response => response.json())
-            .then(data => {
-                todasLasCapturas = data.capturas;
-            })
-            .catch(error => {
-                console.error("Error cargando el mapa:", error);
-                document.getElementById('contenedor-resultados-mapa').innerHTML = "<p>Error al sincronizar el mapa con el archivo de datos.</p>";
-            });
-
-        // Función para filtrar y mostrar peces según el spot elegido
-        function filtrarPorSpot(nombreSpot, botonPresionado) {
-            // Estilo visual: activar el botón seleccionado
+        async function filtrarPorSpot(nombreSpot, botonPresionado) {
             document.querySelectorAll('.spot-btn').forEach(btn => btn.classList.remove('active'));
             botonPresionado.classList.add('active');
 
             const contenedor = document.getElementById('contenedor-resultados-mapa');
             const titulo = document.getElementById('titulo-zona');
-            contenedor.innerHTML = ""; // Limpiar pantalla
+            contenedor.innerHTML = "<p>Buscando en las coordenadas del servidor...</p>";
 
-            // Cambiar el título dinámicamente según la zona elegida
             let nombresFormateados = {
                 'tazacorte': "Puerto de Tazacorte (La Palma)",
                 'fuencaliente': "Las Salinas / Fuencaliente (La Palma)",
@@ -177,29 +74,36 @@
             };
             titulo.innerText = `🎣 Capturas en: ${nombresFormateados[nombreSpot]}`;
 
-            // Buscar en la base de datos JSON los peces de ese lugar exacto
-            const pecesFiltrados = todasLasCapturas.filter(pez => pez.lugar.toLowerCase() === nombreSpot);
+            try {
+                // Filtramos en la base de datos directamente por la columna lugar
+                const { data: pecesFiltrados, error } = await _supabase
+                    .from('capturas')
+                    .select('*')
+                    .eq('lugar', nombreSpot);
 
-            if(pecesFiltrados.length === 0) {
-                contenedor.innerHTML = `<p style="color: #e76f51; font-weight: bold;">Aún no has registrado capturas en este punto en tu archivo JSON o la pieza se escapó.</p>`;
-                return;
+                if (error) throw error;
+
+                contenedor.innerHTML = "";
+                if(!pecesFiltrados || pecesFiltrados.length === 0) {
+                    contenedor.innerHTML = `<p style="color: #e76f51; font-weight: bold;">Sin capturas registradas en este spot.</p>`;
+                    return;
+                }
+
+                pecesFiltrados.forEach(pez => {
+                    contenedor.innerHTML += `
+                        <article class="mini-pez-card">
+                            <img class="mini-pez-img" src="${pez.foto_url}" alt="${pez.especie}">
+                            <div class="mini-pez-info">
+                                <h4>${pez.especie}</h4>
+                                <p><strong>Peso:</strong> ${pez.peso}</p>
+                                <p><strong>Cebo:</strong> ${pez.cebo || 'N/A'}</p>
+                                <p><strong>Fecha:</strong> ${pez.fecha || 'N/A'}</p>
+                            </div>
+                        </article>`;
+                });
+            } catch (err) {
+                contenedor.innerHTML = "<p>Error de conexión: " + err.message + "</p>";
             }
-
-            // Pintar las capturas encontradas en ese punto del mapa
-            pecesFiltrados.forEach(pez => {
-                const tarjetaMini = `
-                    <article class="mini-pez-card">
-                        <img class="mini-pez-img" src="${pez.foto}" alt="${pez.especie}">
-                        <div class="mini-pez-info">
-                            <h4>${pez.especie}</h4>
-                            <p><strong>Peso:</strong> ${pez.weight || pez.peso}</p>
-                            <p><strong>Cebo:</strong> ${pez.cebo}</p>
-                            <p><strong>Fecha:</strong> ${pez.fecha}</p>
-                        </div>
-                    </article>
-                `;
-                contenedor.innerHTML += tarjetaMini;
-            });
         }
     </script>
 </body>
