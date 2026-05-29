@@ -12,12 +12,30 @@
         nav a { color: #f4f7f6; text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1rem; }
         nav a:hover, nav a.active { color: #48cae4; }
         .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        
         .map-section { background: #1c2541; border-radius: 12px; padding: 2rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 3rem; border: 1px solid #3a506b; }
-        .spots-container { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .spot-btn { background: #0b132b; border: 2px solid #48cae4; color: white; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.2s; }
-        .spot-btn:hover, .spot-btn.active { background: #48cae4; color: #0b132b; transform: scale(1.05); }
+        .map-wrapper { position: relative; max-width: 450px; margin: 0 auto; background: #0b132b; border-radius: 8px; padding: 1rem; border: 1px solid #3a506b; }
+        .isla-svg { width: 100%; height: auto; display: block; }
+        
+        .pin { position: absolute; width: 16px; height: 16px; background-color: #e76f51; border: 3px solid white; border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%); transition: all 0.3s ease; box-shadow: 0 0 10px rgba(231,111,81,0.8); }
+        .pin:hover, .pin.active { background-color: #48cae4; transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 0 15px #48cae4; z-index: 10; }
+        
+        #pin-tazacorte { top: 52%; left: 33%; }
+        #pin-fuencaliente { top: 92%; left: 52%; }
+        #pin-puertosc { top: 51%; left: 69%; }
+        #pin-prismas { top: 56%; left: 68%; }
+        #pin-puertopaja { top: 38%; left: 74%; }
+
+        .pin-label { position: absolute; background: rgba(28, 37, 65, 0.9); color: #95d5b2; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; pointer-events: none; transform: translate(-50%, -190%); display: none; white-space: nowrap; border: 1px solid #3a506b; }
+        .pin-container:hover .pin-label { display: block; }
+
         .resultados-zona { background: #1c2541; border-radius: 12px; padding: 2rem; border-left: 5px solid #48cae4; }
-        .resultados-zona h2 { margin-top: 0; color: #95d5b2; }
+        .zona-header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 2px solid #3a506b; padding-bottom: 0.5rem; }
+        .resultados-zona h2 { margin: 0; color: #95d5b2; }
+        
+        .gmaps-btn { display: inline-block; background: #2a9d8f; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: bold; font-size: 0.9rem; transition: background 0.3s; }
+        .gmaps-btn:hover { background: #48cae4; color: #0b132b; }
+
         .grid-resultados { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
         .mini-pez-card { background: #0b132b; border-radius: 8px; overflow: hidden; display: flex; align-items: center; gap: 1rem; padding: 0.5rem; border: 1px solid #3a506b; }
         .mini-pez-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
@@ -27,56 +45,96 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <header><h1>Zonas de Pesca</h1></header>
+    <header><h1>Zonas de Pesca: La Palma 🌋</h1></header>
     <nav>
         <a href="index.html">El Arsenal (Equipos)</a>
         <a href="capturas.html">Mis Capturas</a>
         <a href="mapa.html" class="active">Mapa de Pesca</a>
     </nav>
     <div class="container">
+        
         <section class="map-section">
-            <h2>🗺️ Selector de Puntos Estratégicos</h2>
-            <p>Toca cualquiera de los spots para consultar la base de datos de capturas en vivo de esa zona.</p>
-            <div class="spots-container">
-                <button class="spot-btn" onclick="filtrarPorSpot('tazacorte', this)">🌋 La Palma: Muelle de Tazacorte</button>
-                <button class="spot-btn" onclick="filtrarPorSpot('fuencaliente', this)">🧂 La Palma: Las Salinas</button>
-                <button class="spot-btn" onclick="filtrarPorSpot('lasgalletas', this)">⛵ Tenerife: Las Galletas</button>
-                <button class="spot-btn" onclick="filtrarPorSpot('bajamar', this)">🌊 Tenerife: Bajamar</button>
+            <h2>🗺️ Mapa Interactivo de la Isla Bonita</h2>
+            <p>Toca o pasa el cursor sobre los puntos rojos del mapa para seleccionar tu pesquero.</p>
+            
+            <div class="map-wrapper">
+                <svg class="isla-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M45,10 C58,12 68,18 73,30 C76,38 78,48 70,58 C66,64 62,72 58,85 C55,95 56,105 52,112 C49,115 45,110 44,103 C42,90 38,82 31,70 C24,58 20,48 24,36 C28,24 34,12 45,10 Z" fill="#1c2541" stroke="#3a506b" stroke-width="1.5"/>
+                    <path d="M45,10 C58,12 68,18 73,30 C76,38 78,48 70,58 C66,64 62,72 58,85 C55,95 56,105 52,112 C49,115 45,110 44,103 C42,90 38,82 31,70 C24,58 20,48 24,36 C28,24 34,12 45,10 Z" fill="#3a506b" opacity="0.3"/>
+                </svg>
+
+                <div class="pin-container" id="pin-tazacorte">
+                    <div class="pin" onclick="filtrarPorSpot('tazacorte', this)"></div>
+                    <div class="pin-label">Muelle de Tazacorte</div>
+                </div>
+                <div class="pin-container" id="pin-fuencaliente">
+                    <div class="pin" onclick="filtrarPorSpot('fuencaliente', this)"></div>
+                    <div class="pin-label">Las Salinas</div>
+                </div>
+                <div class="pin-container" id="pin-puertosc">
+                    <div class="pin" onclick="filtrarPorSpot('puertosc', this)"></div>
+                    <div class="pin-label">Puerto de SC</div>
+                </div>
+                <div class="pin-container" id="pin-prismas">
+                    <div class="pin" onclick="filtrarPorSpot('prismas', this)"></div>
+                    <div class="pin-label">Los Prismas (Cabildo)</div>
+                </div>
+                <div class="pin-container" id="pin-puertopaja">
+                    <div class="pin" onclick="filtrarPorSpot('puertopaja', this)"></div>
+                    <div class="pin-label">Puerto Paja</div>
+                </div>
             </div>
         </section>
+
         <section class="resultados-zona">
-            <h2 id="titulo-zona">📍 Esperando coordenadas...</h2>
+            <div class="zona-header-flex">
+                <h2 id="titulo-zona">📍 Selecciona un punto del mapa</h2>
+                <a id="gmaps-link" class="gmaps-btn" href="#" target="_blank" style="display: none;">🗺️ Ver en Google Maps</a>
+            </div>
             <div class="grid-resultados" id="contenedor-resultados-mapa">
-                <p style="color: #a5a5a5;">Selecciona un punto arriba para iniciar el escaneo del servidor en tiempo real.</p>
+                <p style="color: #a5a5a5;">Selecciona un pesquero en el mapa para escanear tus capturas en tiempo real.</p>
             </div>
         </section>
     </div>
-    <footer><p>&copy; 2026 Pesca Salada y Más</p></footer>
+    <footer><p>© 2026 Pesca Salada y Más</p></footer>
 
     <script>
         const SUPABASE_URL = "https://gvycmttihglhveiblmdl.supabase.co";
         const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function filtrarPorSpot(nombreSpot, botonPresionado) {
-            document.querySelectorAll('.spot-btn').forEach(btn => btn.classList.remove('active'));
-            botonPresionado.classList.add('active');
+        const enlacesGoogleMaps = {
+            'tazacorte': "https://maps.app.goo.gl/9h2XGfW7bXQYvPzA8",
+            'fuencaliente': "https://maps.app.goo.gl/w9Z3C7JtXkWY8vBB9",
+            'puertosc': "https://maps.app.goo.gl/bM3K7Yw9WjKY6vCC8",
+            'puertopaja': "https://maps.app.goo.gl/yX3K7Zt9WjKY5vDD7",
+            'prismas': "https://maps.app.goo.gl/zM3K7Yw9WjKY7vEE9"
+        };
+
+        const nombresFormateados = {
+            'tazacorte': "Muelle de Tazacorte",
+            'fuencaliente': "Las Salinas (Fuencaliente)",
+            'puertosc': "Puerto de Santa Cruz de La Palma",
+            'puertopaja': "Puerto Paja (Puntallana)",
+            'prismas': "Los Prismas (Frente al Cabildo)"
+        };
+
+        async function filtrarPorSpot(nombreSpot, elementoPin) {
+            document.querySelectorAll('.pin').forEach(p => p.classList.remove('active'));
+            elementoPin.classList.add('active');
 
             const contenedor = document.getElementById('contenedor-resultados-mapa');
             const titulo = document.getElementById('titulo-zona');
-            contenedor.innerHTML = "<p>Buscando en las coordenadas del servidor...</p>";
-
-            let nombresFormateados = {
-                'tazacorte': "Puerto de Tazacorte (La Palma)",
-                'fuencaliente': "Las Salinas / Fuencaliente (La Palma)",
-                'lasgalletas': "Las Galletas (Tenerife)",
-                'bajamar': "Bajamar / Punta del Hidalgo (Tenerife)"
-            };
+            const linkGmaps = document.getElementById('gmaps-link');
+            
+            contenedor.innerHTML = "<p>Consultando base de datos satelital...</p>";
             titulo.innerText = `🎣 Capturas en: ${nombresFormateados[nombreSpot]}`;
+            
+            linkGmaps.href = enlacesGoogleMaps[nombreSpot];
+            linkGmaps.style.display = "inline-block";
 
             try {
-                // Filtramos en la base de datos directamente por la columna lugar
-                const { data: pecesFiltrados, error } = await _supabase
+                const { data: peces, error } = await _supabase
                     .from('capturas')
                     .select('*')
                     .eq('lugar', nombreSpot);
@@ -84,12 +142,12 @@
                 if (error) throw error;
 
                 contenedor.innerHTML = "";
-                if(!pecesFiltrados || pecesFiltrados.length === 0) {
-                    contenedor.innerHTML = `<p style="color: #e76f51; font-weight: bold;">Sin capturas registradas en este spot.</p>`;
+                if(!peces || peces.length === 0) {
+                    contenedor.innerHTML = `<p style="color: #e76f51; font-weight: bold;">Ninguna captura registrada en este spot todavía. ¡Toca estrenarlo!</p>`;
                     return;
                 }
 
-                pecesFiltrados.forEach(pez => {
+                peces.forEach(pez => {
                     contenedor.innerHTML += `
                         <article class="mini-pez-card">
                             <img class="mini-pez-img" src="${pez.foto_url}" alt="${pez.especie}">
@@ -102,7 +160,7 @@
                         </article>`;
                 });
             } catch (err) {
-                contenedor.innerHTML = "<p>Error de conexión: " + err.message + "</p>";
+                contenedor.innerHTML = "<p>Error: " + err.message + "</p>";
             }
         }
     </script>
