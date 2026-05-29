@@ -5,115 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesca Salada y Más - Bitácora de un Pescador</title>
     <style>
-        /* Estilos Base Estilo Marino Oscuro */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #0b132b;
-            color: #f4f7f6;
-        }
-        header {
-            background: linear-gradient(135deg, #1c2541, #0b132b);
-            text-align: center;
-            padding: 3rem 1rem;
-            border-bottom: 3px solid #48cae4;
-        }
-        header h1 { margin: 0; font-size: 2.8rem; color: #48cae4; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #0b132b; color: #f4f7f6; }
+        header { background: linear-gradient(135deg, #1c2541, #0b132b); text-align: center; padding: 3rem 1rem; border-bottom: 3px solid #48cae4; }
+        header h1 { margin: 0; font-size: 2.8rem; color: #48cae4; }
         header p { margin: 0.5rem 0 0 0; font-size: 1.2rem; color: #95d5b2; }
-
-        /* Menú de Navegación */
-        nav {
-            background-color: #1c2541;
-            text-align: center;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        nav a {
-            color: #f4f7f6;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: color 0.3s;
-        }
+        nav { background-color: #1c2541; text-align: center; padding: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        nav a { color: #f4f7f6; text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1rem; }
         nav a.active, nav a:hover { color: #48cae4; }
-
         .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-
-        /* Resumen de estadísticas rápidas */
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            background: #1c2541;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        }
+        .stats-bar { display: flex; justify-content: space-around; background: #1c2541; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
         .stat-item { text-align: center; }
         .stat-number { font-size: 2rem; font-weight: bold; color: #48cae4; display: block; }
         .stat-label { color: #a5a5a5; font-size: 0.9rem; text-transform: uppercase; }
-
-        /* Filtros de Inventario */
-        .filter-menu {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .filter-btn {
-            background: #1c2541;
-            border: 2px solid #3a506b;
-            color: white;
-            padding: 0.6rem 1.5rem;
-            margin: 0 5px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .filter-btn.active, .filter-btn:hover {
-            background: #48cae4;
-            color: #0b132b;
-            border-color: #48cae4;
-        }
-
-        /* Rejilla de Materiales */
-        .grid-materiales {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .item-card {
-            background: #1c2541;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            border-left: 5px solid #3a506b;
-            transition: transform 0.2s;
-        }
-        .item-card:hover { transform: translateY(-3px); }
-        
-        /* Colores según el semáforo del estado */
-        .status-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            float: right;
-        }
+        .filter-menu { text-align: center; margin-bottom: 2rem; }
+        .filter-btn { background: #1c2541; border: 2px solid #3a506b; color: white; padding: 0.6rem 1.5rem; margin: 0 5px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .filter-btn.active, .filter-btn:hover { background: #48cae4; color: #0b132b; border-color: #48cae4; }
+        .grid-materiales { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .item-card { background: #1c2541; border-radius: 10px; padding: 1.5rem; border-left: 5px solid #3a506b; }
+        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; float: right; }
         .status-listo { background-color: #2a9d8f; color: white; }
         .status-mantenimiento { background-color: #e9c46a; color: #264653; }
         .status-boxes { background-color: #e76f51; color: white; }
-
         .item-card h3 { margin: 0 0 0.5rem 0; color: #48cae4; font-size: 1.3rem; }
         .item-card .modelo { color: #95d5b2; font-style: italic; margin-bottom: 1rem; font-size: 0.9rem; }
         .item-card p { margin: 0; color: #d1d1d1; line-height: 1.4; }
-
         footer { text-align: center; padding: 2rem; background-color: #0b132b; color: #5c677d; border-top: 1px solid #1c2541; margin-top: 4rem; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -129,26 +47,13 @@
     </nav>
 
     <div class="container">
-        
-        <!-- Barra de estadísticas dinámicas automáticas -->
         <section class="stats-bar">
-            <div class="stat-item">
-                <span class="stat-number" id="stat-capturas">0</span>
-                <span class="stat-label">Capturas Registradas</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="stat-equipos">0</span>
-                <span class="stat-label">Equipos en Arsenal</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">La Palma</span>
-                <span class="stat-label">Base de Operaciones</span>
-            </div>
+            <div class="stat-item"><span class="stat-number" id="stat-capturas">0</span><span class="stat-label">Capturas</span></div>
+            <div class="stat-item"><span class="stat-number" id="stat-equipos">0</span><span class="stat-label">Equipos</span></div>
+            <div class="stat-item"><span class="stat-number">La Palma</span><span class="stat-label">Operaciones</span></div>
         </section>
 
         <h2>Inventario de Material y Equipos</h2>
-        
-        <!-- Botones para filtrar el equipo -->
         <div class="filter-menu">
             <button class="filter-btn active" onclick="filtrarMaterial('todos', this)">Todo el material</button>
             <button class="filter-btn" onclick="filtrarMaterial('canas', this)">Cañas</button>
@@ -156,88 +61,73 @@
             <button class="filter-btn" onclick="filtrarMaterial('repuestos', this)">Repuestos y Accesorios</button>
         </div>
 
-        <!-- Aquí se inyectarán las tarjetas de tus cañas y carretes desde el JSON -->
         <main class="grid-materiales" id="contenedor-materiales">
-            <p>Cargando arsenal...</p>
+            <p>Conectando con la base de datos en la nube...</p>
         </main>
-
     </div>
 
-    <footer>
-        <p>&copy; 2026 Pesca Salada y Más - Cuida el mar canario.</p>
-    </footer>
+    <footer><p>&copy; 2026 Pesca Salada y Más</p></footer>
 
-    <!-- CÓDIGO JAVASCRIPT: Se encarga de leer el JSON sin que tú hagas nada -->
     <script>
+        const SUPABASE_URL = "https://gvycmttihglhveiblmdl.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let todosLosEquipos = [];
 
-        // 1. Leer el archivo JSON al cargar la página
-        fetch('datos-pesca.json')
-            .then(response => response.json())
-            .then(data => {
-                todosLosEquipos = data.equipos;
-                
-                // Actualizar números de las estadísticas en la barra superior
-                document.getElementById('stat-capturas').innerText = data.capturas.length;
-                document.getElementById('stat-equipos').innerText = data.equipos.length;
-                
-                // Mostrar todo el material al principio
+        async function cargarDatos() {
+            try {
+                // 1. Traer los equipos de Supabase
+                const { data: equipos, error: err1 } = await _supabase.from('equipos').select('*');
+                if (err1) throw err1;
+                todosLosEquipos = equipos;
+
+                // 2. Traer las capturas solo para contar cuántas van
+                const { data: capturas, error: err2 } = await _supabase.from('capturas').select('id');
+                if (err2) throw err2;
+
+                // Actualizar contadores superiores
+                document.getElementById('stat-capturas').innerText = capturas.length;
+                document.getElementById('stat-equipos').innerText = equipos.length;
+
                 renderizarEquipos(todosLosEquipos);
-            })
-            .catch(error => {
-                console.error("Error cargando los datos de pesca:", error);
-                document.getElementById('contenedor-materiales').innerHTML = "<p>Error al cargar el arsenal. Asegúrate de tener el archivo datos-pesca.json creado.</p>";
-            });
+            } catch (error) {
+                console.error(error);
+                document.getElementById('contenedor-materiales').innerHTML = "<p>Error al conectar con Supabase: " + error.message + "</p>";
+            }
+        }
 
-        // 2. Función para pintar las tarjetas en la pantalla
-        function renderizarEquipos(listaAFiltrar) {
+        function renderizarEquipos(lista) {
             const contenedor = document.getElementById('contenedor-materiales');
-            contenedor.innerHTML = ""; // Vaciar cargando...
-
-            if(listaAFiltrar.length === 0) {
-                contenedor.innerHTML = "<p>No hay elementos en esta categoría todavía.</p>";
+            contenedor.innerHTML = "";
+            if(lista.length === 0) {
+                contenedor.innerHTML = "<p>El arsenal está vacío. Ve a admin.html para añadir tu primera caña o carrete.</p>";
                 return;
             }
+            lista.forEach(item => {
+                let txt = "Listo"; let clse = "status-listo";
+                if(item.estado === "mantenimiento") { txt = "En Mantenimiento"; clse = "status-mantenimiento"; }
+                if(item.estado === "boxes") { txt = "En Boxes"; clse = "status-boxes"; }
 
-            listaAFiltrar.forEach(item => {
-                // Configurar el texto y color del semáforo de estado
-                let estadoTexto = "Listo para combate";
-                let estadoClase = "status-listo";
-                if(item.estado === "mantenimiento") {
-                    estadoTexto = "En Mantenimiento";
-                    estadoClase = "status-mantenimiento";
-                } else if(item.estado === "boxes") {
-                    estadoTexto = "En Boxes / Roto";
-                    estadoClase = "status-boxes";
-                }
-
-                // Crear el bloque HTML de la tarjeta
-                const tarjeta = `
+                contenedor.innerHTML += `
                     <article class="item-card">
-                        <span class="status-badge ${estadoClase}">${estadoTexto}</span>
+                        <span class="status-badge ${clse}">${txt}</span>
                         <h3>${item.nombre}</h3>
-                        <div class="modelo">${item.modelo}</div>
-                        <p>${item.detalles}</p>
+                        <div class="modelo">${item.modelo || ''}</div>
+                        <p>${item.detalles || 'Sin descripción.'}</p>
                     </article>
                 `;
-                contenedor.innerHTML += tarjeta;
             });
         }
 
-        // 3. Función para los botones de filtrado (Cañas, Carretes, etc.)
-        function filtrarMaterial(categoria, botonPresionado) {
-            // Cambiar la clase activa en los botones
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            botonPresionado.classList.add('active');
-
-            // Filtrar la lista
-            if(categoria === 'todos') {
-                renderizarEquipos(todosLosEquipos);
-            } else {
-                const filtrados = todosLosEquipos.filter(item => item.categoria === categoria);
-                renderizarEquipos(filtrados);
-            }
+        function filtrarMaterial(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if(cat === 'todos') { renderizarEquipos(todosLosEquipos); }
+            else { renderizarEquipos(todosLosEquipos.filter(i => i.categoria === cat)); }
         }
+
+        cargarDatos();
     </script>
 </body>
 </html>
