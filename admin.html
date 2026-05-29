@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Pesca Salada</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0b132b; color: #f4f7f6; margin: 0; padding: 2rem 1rem; }
+        .admin-box { max-width: 600px; margin: 0 auto 3rem auto; background: #1c2541; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #3a506b; }
+        h2 { color: #48cae4; margin-top: 0; border-bottom: 2px solid #3a506b; padding-bottom: 0.5rem; }
+        label { display: block; margin: 1rem 0 0.3rem 0; font-weight: bold; color: #95d5b2; }
+        input, select, textarea { width: 100%; padding: 0.7rem; border-radius: 6px; border: 1px solid #3a506b; background: #0b132b; color: white; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 1rem; background: #48cae4; border: none; color: #0b132b; font-weight: bold; font-size: 1.1rem; border-radius: 6px; cursor: pointer; margin-top: 1.5rem; transition: background 0.3s; }
+        button:hover { background: #95d5b2; }
+        .nav-back { text-align: center; margin-bottom: 2rem; }
+        .nav-back a { color: #48cae4; text-decoration: none; font-weight: bold; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="nav-back"><a href="index.html">← Volver a la Web Pública</a></div>
+
+    <div class="admin-box">
+        <h2>🐟 Registrar Nueva Captura</h2>
+        <form id="form-captura">
+            <label>Especie / Pez:</label>
+            <input type="text" id="pez-especie" placeholder="Ej: Medregal, Vieja, Sargos" required>
+
+            <label>Peso estimado:</label>
+            <input type="text" id="pez-peso" placeholder="Ej: 2.3 kg" required>
+
+            <label>Zona de Pesca (Canarias):</label>
+            <select id="pez-lugar" required>
+                <option value="tazacorte">La Palma: Muelle de Tazacorte</option>
+                <option value="fuencaliente">La Palma: Las Salinas (Fuencaliente)</option>
+                <option value="lasgalletas">Tenerife: Las Galletas</option>
+                <option value="bajamar">Tenerife: Bajamar</option>
+            </select>
+
+            <label>Cebo o Señuelo utilizado:</label>
+            <input type="text" id="pez-cebo" placeholder="Ej: Cangrejo blanco, Jig 40g">
+
+            <label>Fecha de la captura:</label>
+            <input type="text" id="pez-fecha" placeholder="Ej: Mayo 2026">
+
+            <label>Subir Foto del Pez:</label>
+            <input type="file" id="pez-foto" accept="image/*" required>
+
+            <button type="submit">Subir Captura al Servidor</button>
+        </form>
+    </div>
+
+    <div class="admin-box">
+        <h2>🎒 Añadir Material al Arsenal</h2>
+        <form id="form-equipo">
+            <label>Nombre del Artículo:</label>
+            <input type="text" id="eq-nombre" placeholder="Ej: Carrete Shimano Stradic" required>
+
+            <label>Categoría:</label>
+            <select id="eq-categoria" required>
+                <option value="canas">Caña</option>
+                <option value="carretes">Carrete</option>
+                <option value="repuestos">Repuesto o Accesorio</option>
+                <option value="anzuelos">Anzuelos / Aparejos</option>
+            </select>
+
+            <label>Modelo / Medidas:</label>
+            <input type="text" id="eq-modelo" placeholder="Ej: 4000 XG / 3.00 metros">
+
+            <label>Estado Actual (Semáforo):</label>
+            <select id="eq-estado" required>
+                <option value="listo">🟢 Listo para combate</option>
+                <option value="mantenimiento">🟡 En mantenimiento / Limpieza</option>
+                <option value="boxes">🔴 En boxes / Roto</option>
+            </select>
+
+            <label>Detalles o Notas:</label>
+            <textarea id="eq-detalles" rows="3" placeholder="¿Para qué técnica lo usas? ¿Qué le pasa si está roto?"></textarea>
+
+            <button type="submit">Guardar en el Arsenal</button>
+        </form>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE TU SERVIDOR (Cambia esto con tus llaves reales)
+        const SUPABASE_URL = "gvycmttihglhveiblmdl";
+        const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
+        
+        // Inicializar Supabase
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- LÓGICA FORMULARIO 1: SUBIR CAPTURA (FOTO + DATOS) ---
+        document.getElementById('form-captura').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Subiendo archivo e imagen...";
+            btn.disabled = true;
+
+            const especie = document.getElementById('pez-especie').value;
+            const peso = document.getElementById('pez-peso').value;
+            const lugar = document.getElementById('pez-lugar').value;
+            const cebo = document.getElementById('pez-cebo').value;
+            const fecha = document.getElementById('pez-fecha').value;
+            const archivoFoto = document.getElementById('pez-foto').files[0];
+
+            try {
+                // 1. Subir la imagen real al Almacén (Storage Bucket) de Supabase
+                const nombreArchivo = `${Date.now()}_${archivoFoto.name}`;
+                const { data: storageData, error: storageError } = await supabase.storage
+                    .from('PESCA SALADA') // Nombre exacto de tu carpeta en Supabase
+                    .upload(nombreArchivo, archivoFoto);
+
+                if (storageError) throw storageError;
+
+                // 2. Obtener la dirección de internet pública de esa foto recién subida
+                const { data: urlData } = supabase.storage
+                    .from('PESCA SALADA')
+                    .getPublicUrl(nombreArchivo);
+                
+                const fotoUrl = urlData.publicUrl;
+
+                // 3. Guardar los textos y el enlace de la foto en la tabla 'capturas'
+                const { error: dbError } = await supabase
+                    .from('capturas')
+                    .insert([{ especie, peso, lugar, cebo, fecha, foto_url: fotoUrl }]);
+
+                if (dbError) throw dbError;
+
+                alert("¡Captura registrada con éxito en la nube!");
+                document.getElementById('form-captura').reset();
+            } catch (error) {
+                console.error(error);
+                alert("Error crítico: " + error.message);
+            } finally {
+                btn.innerText = "Subir Captura al Servidor";
+                btn.disabled = false;
+            }
+        });
+
+        // --- LÓGICA FORMULARIO 2: SUBIR EQUIPOS ---
+        document.getElementById('form-equipo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Guardando equipo...";
+            btn.disabled = true;
+
+            const nombre = document.getElementById('eq-nombre').value;
+            const categoria = document.getElementById('eq-categoria').value;
+            const modelo = document.getElementById('eq-modelo').value;
+            const estado = document.getElementById('eq-estado').value;
+            const detalles = document.getElementById('eq-detalles').value;
+
+            try {
+                const { error } = await supabase
+                    .from('equipos')
+                    .insert([{ nombre, categoria, modelo, estado, detalles }]);
+
+                if (error) throw error;
+
+                alert("¡Equipo añadido al arsenal con éxito!");
+                document.getElementById('form-equipo').reset();
+            } catch (error) {
+                console.error(error);
+                alert("Error al guardar equipo: " + error.message);
+            } finally {
+                btn.innerText = "Guardar en el Arsenal";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
