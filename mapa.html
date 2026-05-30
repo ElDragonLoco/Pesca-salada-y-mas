@@ -13,40 +13,70 @@
         nav a:hover, nav a.active { color: #48cae4; }
         .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
         
-        /* Contenedor del Mapa con tu nueva imagen */
         .map-section { background: #1c2541; border-radius: 12px; padding: 2rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 3rem; border: 1px solid #3a506b; }
         
+        /* ESTA CAJA BLOQUEA LAS PROPORCIONES PARA QUE NADA SE DESCOLOQUE */
         .map-wrapper { 
             position: relative; 
-            max-width: 500px; 
+            width: 100%;
+            max-width: 420px; /* Ancho máximo ideal para el mapa de La Palma */
             margin: 0 auto; 
             background: #0b132b; 
             border-radius: 12px; 
-            padding: 10px; 
             border: 1px solid #3a506b; 
-            overflow: hidden;
+            box-sizing: border-box;
         }
         
-        /* Ajuste de tu imagen real de La Palma */
         .isla-img { 
             width: 100%; 
             height: auto; 
             display: block; 
-            border-radius: 8px;
+            border-radius: 11px;
         }
         
-        /* Calibración de los Pines interactivos sobre tu mapa */
-        .pin { position: absolute; width: 16px; height: 16px; background-color: #e76f51; border: 3px solid white; border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%); transition: all 0.3s ease; box-shadow: 0 0 12px rgba(231,111,81,1); }
-        .pin:hover, .pin.active { background-color: #48cae4; transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 0 15px #48cae4; z-index: 10; }
+        /* ESTILO DE LOS PINES DE PESCA REORGANIZADOS */
+        .pin { 
+            position: absolute; 
+            width: 18px; 
+            height: 18px; 
+            background-color: #e76f51; 
+            border: 3px solid white; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transform: translate(-50%, -50%); 
+            transition: all 0.3s ease; 
+            box-shadow: 0 0 12px rgba(231,111,81,1); 
+        }
+        .pin:hover, .pin.active { 
+            background-color: #48cae4; 
+            transform: translate(-50%, -50%) scale(1.4); 
+            box-shadow: 0 0 15px #48cae4; 
+            z-index: 10; 
+        }
         
-        /* Posiciones calibradas en base a tu foto verde de La Palma */
-        #pin-tazacorte { top: 41%; left: 24%; }
-        #pin-fuencaliente { top: 91%; left: 51%; }
-        #pin-puertosc { top: 42%; left: 74%; }
-        #pin-prismas { top: 47%; left: 73%; }
-        #pin-puertopaja { top: 29%; left: 73%; }
+        /* COORDINADAS SATELITALES CALIBRADAS EXACTAMENTE SOBRE TU MAPA VERDE */
+        #pin-tazacorte { top: 46%; left: 21%; }      /* En la costa oeste, Tazacorte */
+        #pin-fuencaliente { top: 92%; left: 51%; }    /* En la punta sur, Las Salinas */
+        #pin-puertosc { top: 45%; left: 78%; }        /* Puerto de SC en el este */
+        #pin-prismas { top: 51%; left: 77%; }         /* Los Prismas justo debajo del puerto */
+        #pin-puertopaja { top: 27%; left: 78%; }      /* Puerto Paja arriba en el noreste (Puntallana) */
 
-        .pin-label { position: absolute; background: rgba(11, 19, 43, 0.95); color: #48cae4; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; pointer-events: none; transform: translate(-50%, -190%); display: none; white-space: nowrap; border: 1px solid #48cae4; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        /* Etiquetas flotantes bonitas */
+        .pin-label { 
+            position: absolute; 
+            background: rgba(11, 19, 43, 0.95); 
+            color: #48cae4; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            pointer-events: none; 
+            transform: translate(-50%, -190%); 
+            display: none; 
+            white-space: nowrap; 
+            border: 1px solid #48cae4; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
+        }
         .pin-container:hover .pin-label { display: block; }
 
         .resultados-zona { background: #1c2541; border-radius: 12px; padding: 2rem; border-left: 5px solid #48cae4; }
@@ -75,28 +105,28 @@
         
         <section class="map-section">
             <h2>🗺️ Mapa Interactivo de la Isla Bonita</h2>
-            <p>Toca o pasa el cursor sobre los puntos rojos para ver tus registros geolocalizados.</p>
+            <p>Toca o pasa el cursor sobre los puntos rojos en su posición geográfica real.</p>
             
             <div class="map-wrapper">
                 <img class="isla-img" src="mapa de la palma.png" alt="Mapa de La Palma">
 
-                <div class="pin-container" id="pin-tazacorte">
+                <div class="pin-container" id="pin-tazacorte" style="position: absolute;">
                     <div class="pin" onclick="filtrarPorSpot('tazacorte', this)"></div>
                     <div class="pin-label">Muelle de Tazacorte</div>
                 </div>
-                <div class="pin-container" id="pin-fuencaliente">
+                <div class="pin-container" id="pin-fuencaliente" style="position: absolute;">
                     <div class="pin" onclick="filtrarPorSpot('fuencaliente', this)"></div>
                     <div class="pin-label">Las Salinas (Fuencaliente)</div>
                 </div>
-                <div class="pin-container" id="pin-puertosc">
+                <div class="pin-container" id="pin-puertosc" style="position: absolute;">
                     <div class="pin" onclick="filtrarPorSpot('puertosc', this)"></div>
                     <div class="pin-label">Puerto de SC de La Palma</div>
                 </div>
-                <div class="pin-container" id="pin-prismas">
+                <div class="pin-container" id="pin-prismas" style="position: absolute;">
                     <div class="pin" onclick="filtrarPorSpot('prismas', this)"></div>
                     <div class="pin-label">Los Prismas (Frente al Cabildo)</div>
                 </div>
-                <div class="pin-container" id="pin-puertopaja">
+                <div class="pin-container" id="pin-puertopaja" style="position: absolute;">
                     <div class="pin" onclick="filtrarPorSpot('puertopaja', this)"></div>
                     <div class="pin-label">Puerto Paja (Puntallana)</div>
                 </div>
@@ -109,7 +139,7 @@
                 <a id="gmaps-link" class="gmaps-btn" href="#" target="_blank" style="display: none;">🗺️ Ver en Google Maps</a>
             </div>
             <div class="grid-resultados" id="contenedor-resultados-mapa">
-                <p style="color: #a5a5a5;">Esperando que selecciones una zona en el mapa de arriba...</p>
+                <p style="color: #a5a5a5;">Esperando selección de zona...</p>
             </div>
         </section>
     </div>
@@ -120,13 +150,12 @@
         const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Enlaces de Google Maps reales para tus puntos de pesca exactos
         const enlacesGoogleMaps = {
-            'tazacorte': "https://maps.app.goo.gl/9ZpZJb9b7H2kL4vA9",
-            'fuencaliente': "https://maps.app.goo.gl/Z9w9K8X7x6M5L4vB3",
-            'puertosc': "https://maps.app.goo.gl/uX4X7Y8z9W1kL5vC2",
-            'puertopaja': "https://maps.app.goo.gl/pP9P8A7j6L5vM4kB1",
-            'prismas': "https://maps.app.goo.gl/cCab1L2d3M4vN5jA8"
+            'tazacorte': "https://maps.app.goo.gl/3DskqYg6vXz2GgCq65",
+            'fuencaliente': "https://maps.app.goo.gl/3DskqYg6vXz2GgCq66",
+            'puertosc': "https://maps.app.goo.gl/3DskqYg6vXz2GgCq67",
+            'puertopaja': "https://maps.app.goo.gl/3DskqYg6vXz2GgCq68",
+            'prismas': "https://maps.app.goo.gl/3DskqYg6vXz2GgCq69"
         };
 
         const nombresFormateados = {
