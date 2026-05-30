@@ -21,7 +21,6 @@
 
     <div class="nav-back"><a href="index.html">← Volver a la Web Pública</a></div>
 
-    <!-- FORMULARIO 1: CAPTURAS -->
     <div class="admin-box">
         <h2>🐟 Registrar Nueva Captura</h2>
         <form id="form-captura">
@@ -53,7 +52,6 @@
         </form>
     </div>
 
-    <!-- FORMULARIO 2: MATERIAL -->
     <div class="admin-box">
         <h2>🎒 Añadir Material al Arsenal</h2>
         <form id="form-equipo">
@@ -87,7 +85,8 @@
 
     <script>
         const SUPABASE_URL = "https://gvycmttihglhveiblmdl.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7";
+        // Aquí usamos tu clave Publishable Key oficial que vimos en la captura de API
+        const SUPABASE_KEY = "sb_publishable_FV0Fr-Yg-eEHl5_tzjxgWw_7IqmiLg7"; 
         
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -106,10 +105,10 @@
             const archivoFoto = document.getElementById('pez-foto').files[0];
 
             try {
-                // 1. Subir imagen
+                // 1. Subir imagen (Configurado con el nombre estándar del bucket de pesca en minúsculas)
                 const nombreArchivo = `${Date.now()}_${archivoFoto.name}`;
                 const { data: storageData, error: storageError } = await supabase.storage
-                    .from('PESCA SALADA')
+                    .from('pesca-salada') 
                     .upload(nombreArchivo, archivoFoto);
 
                 if (storageError) {
@@ -117,9 +116,9 @@
                     throw storageError;
                 }
 
-                // 2. Obtener URL
+                // 2. Obtener URL pública
                 const { data: urlData } = supabase.storage
-                    .from('PESCA SALADA')
+                    .from('pesca-salada')
                     .getPublicUrl(nombreArchivo);
                 
                 const fotoUrl = urlData.publicUrl;
@@ -138,6 +137,7 @@
                 document.getElementById('form-captura').reset();
             } catch (error) {
                 console.error(error);
+                alert("Fallo en el proceso: " + error.message);
             } finally {
                 btn.innerText = "Subir Captura al Servidor";
                 btn.disabled = false;
